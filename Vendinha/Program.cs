@@ -1,6 +1,8 @@
-﻿using Vendinha.Models;
+﻿using Vendinha.Enums;
+using Vendinha.Models;
 using Vendinha.Services;
 
+var dividaService = new DividaSerivce();
 var clienteService = new ClienteService();
 
 while (true)
@@ -13,6 +15,8 @@ while (true)
     Console.WriteLine("3. Buscar por CPF");
     Console.WriteLine("4. Atualizar cliente");
     Console.WriteLine("5. Remover cliente");
+    Console.WriteLine("6. Criar dívida");
+    Console.WriteLine("7. Listar dívidas");
     Console.WriteLine("0. Sair");
 
     var opcao = Console.ReadLine();
@@ -151,6 +155,51 @@ while (true)
         else
         {
             Console.WriteLine("Cliente não encontrado.");
+        }
+
+        Console.ReadKey();
+    }
+
+    else if (opcao == "6")
+    {
+        var divida = new Divida();
+
+        Console.WriteLine("Id da dívida:");
+        divida.Id = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("Valor:");
+        divida.Valor = decimal.Parse(Console.ReadLine());
+
+        divida.DataCriacao = DateTime.Now;
+        divida.Situacao = SituacaoDivida.Aberta;
+
+        Console.WriteLine("Id do cliente:");
+        divida.ClienteId = int.Parse(Console.ReadLine());
+
+        dividaService.Criar(divida);
+
+        Console.WriteLine("Dívida cadastrada com sucesso.");
+        Console.ReadKey();
+    }
+
+    else if (opcao == "7")
+    {
+        var dividas = dividaService.Listar();
+
+        if (dividas.Count == 0)
+        {
+            Console.WriteLine("Nenhuma dívida cadastrada.");
+        }
+        else
+        {
+            foreach (var divida in dividas)
+            {
+                Console.WriteLine("====================");
+                Console.WriteLine($"Id: {divida.Id}");
+                Console.WriteLine($"Valor: {divida.Valor:C}");
+                Console.WriteLine($"Situação: {divida.Situacao}");
+                Console.WriteLine($"Cliente Id: {divida.ClienteId}");
+            }
         }
 
         Console.ReadKey();

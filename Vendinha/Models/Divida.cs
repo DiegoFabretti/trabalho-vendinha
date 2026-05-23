@@ -9,7 +9,7 @@ namespace Vendinha.Models
     {
         public int Id { get; set; }
 
-        public decimal valor { get; set; }
+        public decimal Valor { get; set; }
 
         public SituacaoDivida Situacao { get; set; }
 
