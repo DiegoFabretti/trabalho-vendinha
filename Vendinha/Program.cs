@@ -17,6 +17,9 @@ while (true)
     Console.WriteLine("5. Remover cliente");
     Console.WriteLine("6. Criar dívida");
     Console.WriteLine("7. Listar dívidas");
+    Console.WriteLine("8. Buscar dívida por Id");
+    Console.WriteLine("9. Atualizar dívida");
+    Console.WriteLine("10. Remover dívida");
     Console.WriteLine("0. Sair");
 
     var opcao = Console.ReadLine();
@@ -173,12 +176,29 @@ while (true)
         divida.DataCriacao = DateTime.Now;
         divida.Situacao = SituacaoDivida.Aberta;
 
-        Console.WriteLine("Id do cliente:");
-        divida.ClienteId = int.Parse(Console.ReadLine());
+        Console.WriteLine("CPF do cliente:");
+        divida.CpfCliente = Console.ReadLine();
 
-        dividaService.Criar(divida);
+        var cliente = clienteService.BuscarPorCpf(divida.CpfCliente);
 
-        Console.WriteLine("Dívida cadastrada com sucesso.");
+        if (cliente == null)
+        {
+            Console.WriteLine("Cliente não encontrado.");
+        }
+        else
+        {
+            var sucesso = dividaService.Criar(divida);
+
+            if (sucesso)
+            {
+                Console.WriteLine("Dívida cadastrada com sucesso.");
+            }
+            else
+            {
+                Console.WriteLine("O cliente já possui uma dívida em aberto.");
+            }
+        }
+
         Console.ReadKey();
     }
 
@@ -198,8 +218,100 @@ while (true)
                 Console.WriteLine($"Id: {divida.Id}");
                 Console.WriteLine($"Valor: {divida.Valor:C}");
                 Console.WriteLine($"Situação: {divida.Situacao}");
-                Console.WriteLine($"Cliente Id: {divida.ClienteId}");
+                Console.WriteLine($"Cliente Id: {divida.CpfCliente}");
             }
+        }
+
+        Console.ReadKey();
+    }
+    else if (opcao == "8")
+    {
+        Console.WriteLine("Digite o Id da dívida:");
+
+        var id = int.Parse(Console.ReadLine());
+
+        var divida = dividaService.BuscarPorId(id);
+
+        if (divida == null)
+        {
+            Console.WriteLine("Dívida não encontrada.");
+        }
+        else
+        {
+            Console.WriteLine($"Id: {divida.Id}");
+            Console.WriteLine($"Valor: {divida.Valor:C}");
+            Console.WriteLine($"Situação: {divida.Situacao}");
+            Console.WriteLine($"CPF Cliente: {divida.CpfCliente}");
+        }
+
+        Console.ReadKey();
+    }
+    else if (opcao == "9")
+    {
+        Console.WriteLine("Digite o Id da dívida:");
+
+        var id = int.Parse(Console.ReadLine());
+
+        var dividaExistente = dividaService.BuscarPorId(id);
+
+        if (dividaExistente == null)
+        {
+            Console.WriteLine("Dívida não encontrada.");
+        }
+        else
+        {
+            var divida = new Divida();
+
+            divida.Id = id;
+
+            Console.WriteLine("Novo valor:");
+            divida.Valor = decimal.Parse(Console.ReadLine());
+
+            Console.WriteLine("Situação da dívida:");
+            Console.WriteLine("0 - Aberta");
+            Console.WriteLine("1 - Paga");
+
+            divida.Situacao =
+                (SituacaoDivida)int.Parse(Console.ReadLine());
+
+            divida.CpfCliente = dividaExistente.CpfCliente;
+
+            divida.DataCriacao = dividaExistente.DataCriacao;
+
+            if (divida.Situacao == SituacaoDivida.Paga)
+            {
+                divida.DataPagamento = DateTime.Now;
+            }
+
+            var sucesso = dividaService.Atualizar(divida);
+
+            if (sucesso)
+            {
+                Console.WriteLine("Dívida atualizada com sucesso.");
+            }
+            else
+            {
+                Console.WriteLine("Erro ao atualizar dívida.");
+            }
+        }
+
+        Console.ReadKey();
+    }
+    else if (opcao == "10")
+    {
+        Console.WriteLine("Digite o Id da dívida:");
+
+        var id = int.Parse(Console.ReadLine());
+
+        var sucesso = dividaService.Remover(id);
+
+        if (sucesso)
+        {
+            Console.WriteLine("Dívida removida com sucesso.");
+        }
+        else
+        {
+            Console.WriteLine("Dívida não encontrada.");
         }
 
         Console.ReadKey();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Vendinha.Enums;
 using Vendinha.Models;
 
 namespace Vendinha.Services
@@ -11,6 +12,12 @@ namespace Vendinha.Services
 
         public bool Criar(Divida divida)
         {
+            var possuiDividaAberta = lista.Any(item => { return item.CpfCliente == divida.CpfCliente && item.Situacao == SituacaoDivida.Aberta; });
+
+            if (possuiDividaAberta) {
+                return false;
+            }
+
             lista.Add(divida);
             return true;
         }

@@ -17,6 +17,6 @@ namespace Vendinha.Models
 
         public DateTime? DataPagamento { get; set; }
 
-        public int ClienteId { get; set; }
+        public string CpfCliente { get; set; }
     }
 }
