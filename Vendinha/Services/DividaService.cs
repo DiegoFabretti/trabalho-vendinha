@@ -6,6 +6,7 @@ using Vendinha.Data;
 using Vendinha.Enums;
 using Vendinha.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 
 namespace Vendinha.Services
@@ -35,6 +36,19 @@ namespace Vendinha.Services
         {
             if (!Validar(divida, out listaErros))
             {
+                return false;
+            }
+
+            bool possuiDividaAberta = contexto.Dividas.Any(item =>
+                item.CpfCliente == divida.CpfCliente &&
+                item.Situacao == SituacaoDivida.Aberta);
+
+            if (possuiDividaAberta)
+            {
+                listaErros.Add(
+                    new ValidationResult(
+                        "O cliente já possui uma dívida em aberto."));
+
                 return false;
             }
 

@@ -12,7 +12,8 @@ namespace Vendinha.Data
         protected override void OnConfiguring(
             DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=.\vendinha.db");
+            optionsBuilder.UseSqlite(
+    @"Data Source=C:\Users\DIEGO\source\repos\Vendinha\Vendinha\vendinha.db");
         }
     }
 }

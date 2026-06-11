@@ -386,6 +386,40 @@ while (true)
     }
     else if (opcao == "D4")
     {
+        var dividas = dividaService.Listar();
+
+        if (dividas.Count == 0)
+        {
+            Console.WriteLine("Nenhuma dívida cadastrada.");
+            Console.ReadKey();
+            continue;
+        }
+
+        Console.WriteLine("DÍVIDAS CADASTRADAS");
+        Console.WriteLine("====================");
+
+        foreach (var dividaItem in dividas)
+        {
+            var cliente = clienteService
+                .BuscarPorCpf(dividaItem.CpfCliente);
+
+            Console.WriteLine($"Id: {dividaItem.Id}");
+
+            if (cliente != null)
+            {
+                Console.WriteLine(
+                    $"Cliente: {cliente.Nome}");
+            }
+
+            Console.WriteLine(
+                $"Valor: {dividaItem.Valor:C}");
+
+            Console.WriteLine(
+                $"Situação: {dividaItem.Situacao}");
+
+            Console.WriteLine("--------------------");
+        }
+
         Console.WriteLine("Digite o Id da dívida:");
 
         var id = int.Parse(Console.ReadLine());
